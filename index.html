@@ -68,105 +68,6 @@
             font-size: 1.05em;
         }
         
-        /* Student ID Entry Screen Styles */
-        .student-id-screen {
-            text-align: center;
-            padding: 20px 0;
-        }
-        
-        .student-id-screen h2 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 1.5em;
-        }
-        
-        .student-id-screen p {
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 1.05em;
-        }
-        
-        .student-id-input-group {
-            max-width: 400px;
-            margin: 0 auto;
-        }
-        
-        #studentIdInput {
-            width: 100%;
-            padding: 15px 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1.2em;
-            text-align: center;
-            font-weight: 600;
-            letter-spacing: 1px;
-            margin-bottom: 20px;
-            transition: border-color 0.3s;
-        }
-        
-        #studentIdInput:focus {
-            outline: none;
-            border-color: #5977ff;
-            box-shadow: 0 0 0 3px rgba(89, 119, 255, 0.1);
-        }
-        
-        .proceed-btn {
-            background: linear-gradient(135deg, #5977ff 0%, #000000 100%);
-            color: white;
-            border: none;
-            padding: 15px 50px;
-            font-size: 1.1em;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        
-        .proceed-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(89, 119, 255, 0.4);
-        }
-        
-        .proceed-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        
-        /* Hide RSVP form initially */
-        #rsvpFormContainer {
-            display: none;
-        }
-        
-        .student-info {
-            background: #f0f4ff;
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            border-left: 4px solid #5977ff;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .student-info strong {
-            color: #5977ff;
-        }
-        
-        .change-id-btn {
-            background: #5977ff;
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9em;
-            transition: background 0.2s;
-        }
-        
-        .change-id-btn:hover {
-            background: #4766e6;
-        }
-        
         .form-group {
             margin-bottom: 25px;
         }
@@ -269,13 +170,6 @@
             color: #e74c3c;
         }
         
-        .help-text {
-            font-size: 0.9em;
-            color: #666;
-            margin-top: 8px;
-            font-style: italic;
-        }
-        
         @media (max-width: 600px) {
             .container {
                 border-radius: 0;
@@ -296,12 +190,6 @@
             .radio-group {
                 flex-direction: column;
                 gap: 10px;
-            }
-            
-            .student-info {
-                flex-direction: column;
-                gap: 15px;
-                align-items: flex-start;
             }
         }
     </style>
@@ -324,35 +212,7 @@
                 Join us for engaging science projects presentations by our students, celebrating student accomplishments from the second term, connecting with fellow parents and building community bonds, and enjoying delicious Vedic Roots snacks!
             </div>
             
-            <!-- Student ID Entry Screen -->
-            <div id="studentIdScreen" class="student-id-screen">
-                <h2>Welcome! Please Enter Your Student ID</h2>
-                <p>To RSVP for this event, please enter your child's student ID number below.</p>
-                
-                <div class="student-id-input-group">
-                    <input 
-                        type="text" 
-                        id="studentIdInput" 
-                        placeholder="Enter Student ID"
-                        autocomplete="off"
-                    >
-                    <p class="help-text">Don't have your student ID? Please contact the school office.</p>
-                    <button class="proceed-btn" id="proceedBtn" onclick="proceedToRSVP()">
-                        Proceed to RSVP
-                    </button>
-                </div>
-            </div>
-            
-            <!-- RSVP Form Container (Hidden initially) -->
-            <div id="rsvpFormContainer">
-                <div class="student-info" id="studentInfo">
-                    <div>
-                        <strong>Student ID:</strong> <span id="studentNumber">Not specified</span>
-                    </div>
-                    <button class="change-id-btn" onclick="changeStudentId()">Change ID</button>
-                </div>
-                
-                <div class="success-message" id="successMessage">
+            <div class="success-message" id="successMessage">
                     ✓ Thank you! Your RSVP has been submitted successfully.
                 </div>
                 
@@ -361,6 +221,11 @@
                 </div>
                 
                 <form id="rsvpForm">
+                    <div class="form-group">
+                        <label for="studentName">Student Name <span class="required">*</span></label>
+                        <input type="text" id="studentName" name="studentName" required>
+                    </div>
+                    
                     <div class="form-group">
                         <label for="parentName">Parent/Guardian Name <span class="required">*</span></label>
                         <input type="text" id="parentName" name="parentName" required>
@@ -411,7 +276,6 @@
                     
                     <button type="submit" class="submit-btn" id="submitBtn">Submit RSVP</button>
                 </form>
-            </div>
         </div>
     </div>
     
@@ -467,23 +331,6 @@
                 }
             }
             
-            // Check if student ID is in URL parameter (for backward compatibility)
-            const urlParams = new URLSearchParams(window.location.search);
-            const studentNumber = urlParams.get('student');
-            
-            if (studentNumber) {
-                // If URL has student ID, skip the entry screen
-                currentStudentId = studentNumber;
-                showRSVPForm();
-            }
-            
-            // Allow Enter key to proceed
-            document.getElementById('studentIdInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    proceedToRSVP();
-                }
-            });
-            
             // Form submission
             document.getElementById('rsvpForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
@@ -502,9 +349,9 @@
                 
                 // Collect form data
                 const formData = {
-                    studentNumber: currentStudentId || 'Not specified',
                     eventName: CONFIG.eventName,
                     eventDate: CONFIG.eventDate,
+                    studentName: document.getElementById('studentName').value,
                     parentName: document.getElementById('parentName').value,
                     email: document.getElementById('email').value,
                     phone: document.getElementById('phone').value,
@@ -544,55 +391,6 @@
                 submitBtn.textContent = 'Submit RSVP';
             });
         });
-        
-        // ============================================
-        // STUDENT ID FUNCTIONS
-        // ============================================
-        
-        function proceedToRSVP() {
-            const studentIdInput = document.getElementById('studentIdInput');
-            const studentId = studentIdInput.value.trim();
-            
-            if (!studentId) {
-                alert('Please enter your student ID to proceed.');
-                studentIdInput.focus();
-                return;
-            }
-            
-            currentStudentId = studentId;
-            showRSVPForm();
-        }
-        
-        function showRSVPForm() {
-            // Hide student ID screen
-            document.getElementById('studentIdScreen').style.display = 'none';
-            
-            // Show RSVP form
-            document.getElementById('rsvpFormContainer').style.display = 'block';
-            
-            // Update student number display
-            document.getElementById('studentNumber').textContent = currentStudentId;
-            
-            // Scroll to top of form
-            document.getElementById('rsvpFormContainer').scrollIntoView({ behavior: 'smooth' });
-        }
-        
-        function changeStudentId() {
-            // Show student ID screen
-            document.getElementById('studentIdScreen').style.display = 'block';
-            
-            // Hide RSVP form
-            document.getElementById('rsvpFormContainer').style.display = 'none';
-            
-            // Clear the input
-            document.getElementById('studentIdInput').value = '';
-            
-            // Focus on input
-            document.getElementById('studentIdInput').focus();
-            
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
     </script>
 </body>
 </html>
