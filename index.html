@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aavishkaar RSVP Form</title>
+    <title>RSVP for Aavishkaar</title>
     <style>
         * {
             margin: 0;
@@ -201,16 +201,16 @@
             <!-- <img src="your-school-logo.png" alt="School Logo" class="logo" id="schoolLogo"> --> 
             
             <h1 id="eventName">Aavishkaar - Vedic Roots Science Fair</h1>
-            <div class="event-date" id="eventDate">Friday, April 10, 2026 at 3:30 PM</div>
+            <div class="event-date" id="eventDate">Friday, March 10, 2026 at 3:30 PM</div>
         </div>
         
         <!-- Event Image placeholder -->
         <!-- <img src="event-flyer.jpg" alt="Event Flyer" class="event-image" id="eventImage"> -->
         
         <div class="content">
-            <!-- <div class="event-description" id="eventDescription">
+            <div class="event-description" id="eventDescription">
                 Join us for engaging science projects presentations by our students, celebrating student accomplishments from the second term, connecting with fellow parents and building community bonds, and enjoying delicious Vedic Roots snacks!
-            </div> -->
+            </div>
             
             <div class="success-message" id="successMessage">
                     ✓ Thank you! Your RSVP has been submitted successfully.
@@ -259,23 +259,39 @@
                         </div>
                     </div>
                     
-                    <div class="form-group">
+                    <div class="form-group" id="numAttendeesGroup" style="display: none;">
                         <label for="numAttendees">Number of Attendees (including yourself)</label>
                         <input type="number" id="numAttendees" name="numAttendees" min="0" max="20" value="1">
                     </div>
                     
-                    <!-- <div class="form-group">
+                    <div class="form-group" id="dietaryGroup" style="display: none;">
                         <label for="dietary">Dietary Restrictions or Allergies</label>
                         <textarea id="dietary" name="dietary" placeholder="Please specify any dietary restrictions, allergies, or special requirements..."></textarea>
-                    </div> -->
+                    </div>
                     
-                    <div class="form-group">
+                    <div class="form-group" id="commentsGroup" style="display: none;">
                         <label for="comments">Additional Comments or Questions</label>
                         <textarea id="comments" name="comments" placeholder="Any questions or special requests?"></textarea>
                     </div>
                     
                     <button type="submit" class="submit-btn" id="submitBtn">Submit RSVP</button>
                 </form>
+            
+            <!-- Thank You Page (Hidden initially) -->
+            <div id="thankYouPage" style="display: none;">
+                <div style="text-align: center; padding: 40px 20px;">
+                    <div style="font-size: 4em; margin-bottom: 20px;">✓</div>
+                    <h2 style="color: #5977ff; font-size: 2em; margin-bottom: 15px;">Thank You!</h2>
+                    <p style="font-size: 1.2em; color: #555; margin-bottom: 30px;">
+                        Your RSVP has been submitted successfully.
+                    </p>
+                    <p style="color: #666; line-height: 1.6;">
+                        We've received your response and look forward to seeing you at the event!
+                        <br><br>
+                        If you need to make any changes, please contact the school office.
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
     
@@ -290,7 +306,7 @@
             
             // Event Details - Customize for each event
             eventName: 'Aavishkaar - Vedic Roots Science Fair',
-            eventDate: 'Friday, April 10, 2026 at 3:30 PM',
+            eventDate: 'Friday, March 10, 2026 at 3:30 PM',
             eventDescription: 'Join us for engaging science projects presentations by our students, celebrating student accomplishments from the second term, connecting with fellow parents and building community bonds, and enjoying delicious Vedic Roots snacks!',
             
             // Optional: Add image URLs
@@ -330,6 +346,28 @@
                     logo.style.display = 'block';
                 }
             }
+            
+            // Handle attendance selection - show additional fields only if "Yes" or "Maybe"
+            const attendanceRadios = document.querySelectorAll('input[name="attendance"]');
+            attendanceRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const numAttendeesGroup = document.getElementById('numAttendeesGroup');
+                    const dietaryGroup = document.getElementById('dietaryGroup');
+                    const commentsGroup = document.getElementById('commentsGroup');
+                    
+                    if (this.value === 'Yes' || this.value === 'Maybe') {
+                        // Show additional fields for Yes/Maybe
+                        numAttendeesGroup.style.display = 'block';
+                        dietaryGroup.style.display = 'block';
+                        commentsGroup.style.display = 'block';
+                    } else {
+                        // Hide additional fields for No
+                        numAttendeesGroup.style.display = 'none';
+                        dietaryGroup.style.display = 'none';
+                        commentsGroup.style.display = 'none';
+                    }
+                });
+            });
             
             // Form submission
             document.getElementById('rsvpForm').addEventListener('submit', async function(e) {
@@ -373,12 +411,14 @@
                         body: JSON.stringify(formData)
                     });
                     
-                    // Show success message
-                    successMsg.style.display = 'block';
-                    document.getElementById('rsvpForm').reset();
+                    // Show thank you page and hide the form
+                    document.getElementById('rsvpForm').style.display = 'none';
+                    successMsg.style.display = 'none';
+                    errorMsg.style.display = 'none';
+                    document.getElementById('thankYouPage').style.display = 'block';
                     
-                    // Scroll to success message
-                    successMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    // Scroll to thank you page
+                    document.getElementById('thankYouPage').scrollIntoView({ behavior: 'smooth', block: 'start' });
                     
                 } catch (error) {
                     console.error('Error:', error);
